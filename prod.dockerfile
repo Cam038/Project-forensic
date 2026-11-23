@@ -21,4 +21,4 @@ RUN pip3 install -r requirements.txt
 COPY prod.entrypoint.sh /app/
 ENTRYPOINT ./prod.entrypoint.sh
 
-CMD ["python3", "app.py"]
+CMD ["gunicorn", "--workers", "2", "--bind", "127.0.0.1:9001", "app:app"]

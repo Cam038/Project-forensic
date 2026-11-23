@@ -22,7 +22,7 @@ def seed_database():
         price=170,
         picture="room-1.jpg",
         category="swimming-pool",
-        description="<p>Spa idéal pour se détendre !</p>",
+        description="Spa idéal pour se détendre !",
         host_user_id=1,
     ))
 
@@ -33,7 +33,7 @@ def seed_database():
         price=95,
         picture="room-2.jpg",
         category="swimming-pool",
-        description="<p>Loft moderne, idéal pour les courts séjours. <em>Proche des transports</em>.</p>",
+        description="Loft moderne, idéal pour les courts séjours. Proche des transports.",
         host_user_id=1,
     ))
 
@@ -44,7 +44,7 @@ def seed_database():
         price=220,
         picture="room-3.jpg",
         category="ski",
-        description="<p>Chalet chaleureux, cheminée, et accès direct aux sentiers.</p>",
+        description="Chalet chaleureux, cheminée, et accès direct aux sentiers.",
         host_user_id=1,
     ))
 
@@ -55,7 +55,7 @@ def seed_database():
         price=150,
         picture="room-4.jpg",
         category="seaside",
-        description="<p>Balcon face à la mer — parfait pour se détendre au soleil.</p>",
+        description="Balcon face à la mer — parfait pour se détendre au soleil.",
         host_user_id=1,
     ))
 
@@ -66,7 +66,7 @@ def seed_database():
         price=320,
         picture="room-5.jpg",
         category="swimming-pool",
-        description="<p>Grande villa, jardin arboré, piscine et cuisine extérieure.</p>",
+        description="Grande villa, jardin arboré, piscine et cuisine extérieure.",
         host_user_id=1,
     ))
 
@@ -77,7 +77,7 @@ def seed_database():
         price=120,
         picture="room-6.jpg",
         category="city",
-        description="<p>Studio compact et stylé, parfait pour découvrir la ville.</p>",
+        description="Studio compact et stylé, parfait pour découvrir la ville.",
         host_user_id=1,
     ))
 
@@ -88,7 +88,7 @@ def seed_database():
         price=135,
         picture="room-7.jpg",
         category="hut",
-        description="<p>Retraite paisible, jardins et sentiers à proximité.</p>",
+        description="Retraite paisible, jardins et sentiers à proximité.",
         host_user_id=1,
     ))
 
@@ -99,7 +99,7 @@ def seed_database():
         price=110,
         picture="room-8.jpg",
         category="hut",
-        description="<p>Intime et charmant, idéal pour les couples.</p>",
+        description="Intime et charmant, idéal pour les couples.",
         host_user_id=1,
     ))
 
@@ -110,7 +110,7 @@ def seed_database():
         price=260,
         picture="room-9.jpg",
         category="ski",
-        description="<p>Accès direct aux pistes, local à skis et sauna.</p>",
+        description="Accès direct aux pistes, local à skis et sauna.",
         host_user_id=1,
     ))
 
@@ -121,7 +121,7 @@ def seed_database():
         price=140,
         picture="room-10.jpg",
         category="loft",
-        description="<p>Loft spacieux avec coin travail, fibre haut débit.</p>",
+        description="Loft spacieux avec coin travail, fibre haut débit.",
         host_user_id=1,
     ))
 

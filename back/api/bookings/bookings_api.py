@@ -1,13 +1,11 @@
-import time
-import hashlib
 import string
-import random
+import secrets
 from datetime import date
 from flask import jsonify, Blueprint, request
 
 from database.init import db
 from api.rooms.rooms_models import Room
-from services.stripe import create_checkout, get_checkout_lines
+from services.stripe import create_checkout, get_checkout_lines, is_checkout_paid
 from .bookings_models import Booking
 from sqlalchemy.orm import joinedload
 
@@ -41,9 +39,10 @@ def get_booking_checkout_lines(reference: str):
         return {'error': 'Cannot get checkout lines without payment'}, 422
 
     try:
-        checkout_session_id = request.args.get("checkout_session_id")
+        # D3 - l'identifiant de session vient de la base, plus jamais de la requete du client
+        checkout_session_id = booking.stripe_checkout_session_id
         return jsonify(get_checkout_lines(checkout_session_id))
-    except:
+    except Exception:
         return {'error': 'Invalid checkout session ID'}, 404
 
 
@@ -87,12 +86,11 @@ def new_booking():
     # Determine the booking total price
     booking_price = room.price * booking_duration_in_days
 
-    # Generate random booking reference
-    booking_reference = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+    # D4 - reference generee avec un generateur cryptographique (module secrets)
+    booking_reference = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(8))
 
-    # Generate random confirmation secret
-    random_string = str(int(time.time())) # get current timestamp in seconds
-    checkout_confirmation_secret = hashlib.sha512(random_string.encode('utf-8')).hexdigest() # hash it with safe sha512
+    # D4 - secret de confirmation aleatoire (256 bits), plus un hash du timestamp
+    checkout_confirmation_secret = secrets.token_urlsafe(32)
 
     # Create Stripe checkout session
     checkout_session = create_checkout(
@@ -134,9 +132,22 @@ def confirm_booking_checkout(reference: str):
     booking = Booking.query.filter_by(reference=reference).first()
     if not booking:
         return {'error': 'Booking not found'}, 404
-    
-    if booking.checkout_confirmation_secret != request.json["confirmationSecret"]:
+
+    if booking.is_paid:
+        return jsonify({"success": True})
+
+    # D4 - comparaison en temps constant
+    confirmation_secret = (request.get_json(silent=True) or {}).get("confirmationSecret")
+    if not isinstance(confirmation_secret, str) or not secrets.compare_digest(booking.checkout_confirmation_secret, confirmation_secret):
         return {'error': 'Invalid confirmation secret'}, 422
+
+    # D4 - le client ne peut plus valider seul : le serveur demande a Stripe si la session est reellement payee
+    try:
+        paid = is_checkout_paid(booking.stripe_checkout_session_id)
+    except Exception:
+        return {'error': 'Unable to verify payment with Stripe'}, 502
+    if not paid:
+        return {'error': 'Payment not confirmed by Stripe'}, 403
 
     booking.is_paid = True
     db.session.commit()

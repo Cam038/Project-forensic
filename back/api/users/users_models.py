@@ -22,6 +22,13 @@ class User(db.Model):
             "email": self.email,
         }
 
+    def to_public_dict(self):
+        # D5 - representation publique d'un hote : pas d'e-mail
+        return {
+            "id": self.id,
+            "name": self.name,
+        }
+
     def set_password(self, clear_password: str):
         self.password_hash = md5(clear_password.encode("utf-8")).hexdigest()
     
